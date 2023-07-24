@@ -1,9 +1,12 @@
 <?php
 
+    interface InfoProduk {
+     public function getInfoProduk(); 
+}
 
-abstract class Produk {
+ abstract class Produk {
     
-private $judul , 
+protected $judul , 
        $penulis,
        $penerbit,
        $harga,
@@ -67,21 +70,13 @@ private $judul ,
         return "$this->penulis, $this->penerbit";
        }
 
-
-      abstract public function getInfoProduk(); 
+      abstract public function getInfo();
       
-      
-       public function getInfo()  {
-
-        $str = "  {$this->judul}  | {$this->getLabel()} (Rp. {$this->harga})";
-
-        return $str;
-    }
 }
 
 
 
-class Komik extends Produk {
+class Komik extends Produk implements InfoProduk {
     public $jmlhalaman;
 
         public function __construct( $judul = "judul", $penulis = "penulis", $penerbit = "penerbit", $harga = 0, $jmlhalaman = 0 ){
@@ -90,8 +85,20 @@ class Komik extends Produk {
             $this->jmlhalaman = $jmlhalaman;
     }
 
- 
+    public function getInfo()  {
 
+        $str = "  {$this->judul}  | {$this->getLabel()} (Rp. {$this->getHarga()})";
+
+        return $str;
+    }
+
+    
+    public function setDiskon( $diskon ) {
+        $this->diskon = $diskon;
+    }
+
+
+ 
     public function getInfoProduk(){
         $str = "Komik : " .  $this->getInfo()  . " ~ {$this->jmlhalaman} Halaman.";
         return $str;
@@ -99,13 +106,20 @@ class Komik extends Produk {
 }
 
 
-class Game extends Produk {
+class Game extends Produk implements InfoProduk {
     public $waktumain;
 
         public function __construct( $judul = "judul", $penulis = "penulis", $penerbit = "penerbit", $harga = 0, $waktumain = 0 ){
 
             parent::__construct($judul, $penulis , $penerbit, $harga );
             $this->waktumain = $waktumain;
+    }
+
+    public function getInfo()  {
+
+        $str = "  {$this->judul}  | {$this->getLabel()} (Rp. {$this->getHarga()})";
+
+        return $str;
     }
 
     public function setDiskon( $diskon ) {
@@ -145,6 +159,7 @@ class CetakInfoProduk {
 $produk1 = new Komik("Naruto", "Masasi Kishimoto", "Shonen Jump",  100000, 100 );
 $produk2 = new Game("One Piece", "Oda", "Gak Tau", 100000, 50 );
 
+$produk1->setDiskon(50);
 
 $cetakproduk = new CetakInfoProduk();
 
